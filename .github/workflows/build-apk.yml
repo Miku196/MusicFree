@@ -17,12 +17,22 @@ jobs:
         with:
           submodules: recursive
           fetch-depth: 0
+          path: .
       - name: Set gradlew executable
         working-directory: ./android
         run: |
           ls -la
           chmod +x gradlew
           ls -la gradlew
+      # 安装Node.js
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      # 安装npm依赖
+      - name: Install npm dependencies
+        run: |
+          npm install
+          cd android && ./gradlew --version
 
       # 步骤 2：配置 Android 构建环境
       - name: Set up JDK 17
@@ -39,6 +49,7 @@ jobs:
           build-tools-version: "34.0.0"
           platform-version: "34"
           cmake-version: "3.22.1"
+          ndk-version: "25.2.9519653"
 
       # 步骤 3：构建未签名的 Release APK
       - name: Build Unsigned APK

@@ -12,11 +12,17 @@ jobs:
     runs-on: ubuntu-latest  # 使用 Ubuntu 系统
 
     steps:
-      # 步骤 1：检出代码（包含子模块和gradle wrapper）
+      # 步骤 1：检出代码并设置权限
       - uses: actions/checkout@v4
         with:
           submodules: recursive
-          fetch-depth: 0  # 获取完整历史记录确保gradle wrapper存在
+          fetch-depth: 0
+      - name: Set gradlew executable
+        working-directory: ./android
+        run: |
+          ls -la
+          chmod +x gradlew
+          ls -la gradlew
 
       # 步骤 2：配置 Android 构建环境
       - name: Set up JDK 17
@@ -26,9 +32,13 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
-      # 安装 Android SDK
+      # 安装 Android SDK 和构建工具
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
+        with:
+          build-tools-version: "34.0.0"
+          platform-version: "34"
+          cmake-version: "3.22.1"
 
       # 步骤 3：构建未签名的 Release APK
       - name: Build Unsigned APK
@@ -45,7 +55,8 @@ jobs:
           
           # 执行构建（增加调试信息）
           echo "=== 开始构建 ==="
-          ./gradlew assembleRelease --no-daemon --stacktrace --info --scan
+          ./gradlew clean
+          ./gradlew assembleRelease --no-daemon --stacktrace --info --scan || (find . -name "*.log" -type f -print -exec cat {} \; && exit 1)
           
           # 验证构建结果
           echo "=== 验证构建结果 ==="

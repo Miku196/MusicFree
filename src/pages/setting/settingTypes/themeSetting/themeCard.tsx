@@ -15,7 +15,7 @@ interface IThemeCardProps {
 export default function ThemeCard(props: IThemeCardProps) {
     const { selected, preview, onPress, title } = props;
 
-    const isPreviewColor = preview?.startsWith("#") ? true : false;
+    const isPreviewColor = preview?.startsWith("#") || preview === "material-you-light" || preview === "material-you-dark";
 
     const colors = useColors();
 
@@ -42,7 +42,7 @@ export default function ThemeCard(props: IThemeCardProps) {
                             }
                             : null,
                     ]}>
-                    {isPreviewColor ? null : (
+                    {isPreviewColor && !preview?.includes("material-you") ? null : (
                         <Image
                             style={styles.image}
                             uri={preview}

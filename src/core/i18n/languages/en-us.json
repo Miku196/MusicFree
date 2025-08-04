@@ -182,6 +182,8 @@
     "themeSettings.setTheme": "Theme Settings",
     "themeSettings.lightMode": "Light Mode",
     "themeSettings.darkMode": "Dark Mode",
+    "themeSettings.materialYouLight": "Material You Light",
+    "themeSettings.materialYouDark": "Material You Dark",
     "themeSettings.customMode": "Custom Background",
     "setCustomTheme.customizeBackground": "Customize Background",
     "setCustomTheme.blur": "Blur",

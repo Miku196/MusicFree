@@ -182,6 +182,8 @@
     "themeSettings.setTheme": "主题设置",
     "themeSettings.lightMode": "浅色模式",
     "themeSettings.darkMode": "深色模式",
+    "themeSettings.materialYouLight": "Material You 浅色",
+    "themeSettings.materialYouDark": "Material You 深色",
     "themeSettings.customMode": "自定义背景",
     "setCustomTheme.customizeBackground": "自定义背景",
     "setCustomTheme.blur": "模糊度",

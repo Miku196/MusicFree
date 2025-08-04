@@ -111,6 +111,28 @@ export default function Background() {
                         }
                     }}
                 />
+                <ThemeCard
+                    preview="material-you-light"
+                    title={t("themeSettings.materialYouLight")}
+                    selected={themeSelectedTheme === "material-you-light"}
+                    onPress={() => {
+                        if (themeSelectedTheme !== "material-you-light") {
+                            Theme.setTheme("material-you-light");
+                            Config.setConfig("theme.followSystem", false);
+                        }
+                    }}
+                />
+                <ThemeCard
+                    preview="material-you-dark"
+                    title={t("themeSettings.materialYouDark")}
+                    selected={themeSelectedTheme === "material-you-dark"}
+                    onPress={() => {
+                        if (themeSelectedTheme !== "material-you-dark") {
+                            Theme.setTheme("material-you-dark");
+                            Config.setConfig("theme.followSystem", false);
+                        }
+                    }}
+                />
 
                 <ThemeCard
                     title={t("themeSettings.customMode")}

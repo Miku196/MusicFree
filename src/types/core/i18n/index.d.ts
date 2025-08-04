@@ -232,6 +232,8 @@ export interface ILanguageData {
     "themeSettings.setTheme": string; // 设置主题
     "themeSettings.lightMode": string; // 明亮模式
     "themeSettings.darkMode": string; // 黑暗模式
+    "themeSettings.materialYouLight": string; // Material You 明亮模式
+    "themeSettings.materialYouDark": string; // Material You 黑暗模式
     "themeSettings.customMode": string; // 自定义模式
 
 

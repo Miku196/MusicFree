@@ -18,37 +18,43 @@ jobs:
           submodules: recursive
           fetch-depth: 0  # 获取完整历史记录确保gradle wrapper存在
 
-      # 步骤 2：配置 JDK 环境（Android 构建依赖）
+      # 步骤 2：配置 Android 构建环境
       - name: Set up JDK 17
-        uses: actions/setup-java@v4  # 推荐使用最新版 setup-java 动作（v4）
+        uses: actions/setup-java@v4
         with:
           java-version: '17'
-          distribution: 'temurin'  # 使用 Adoptium/Temurin JDK（稳定可靠）
-          cache: gradle  # 缓存 Gradle 依赖，加速后续构建
+          distribution: 'temurin'
+          cache: gradle
 
-      # 步骤 3：构建未签名的 Release APK（或 Debug 版）
+      # 安装 Android SDK
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      # 步骤 3：构建未签名的 Release APK
       - name: Build Unsigned APK
         working-directory: ./android
         run: |
-          # 验证gradlew文件存在
-          if [ ! -f "./gradlew" ]; then
-            echo "::error::gradlew file not found!"
-            exit 1
-          fi
-          
-          # 添加执行权限
-          chmod +x gradlew
-          
-          # 显示gradle版本信息
+          # 验证环境
+          echo "=== 环境检查 ==="
+          ls -la
           ./gradlew --version
           
-          # 直接构建未签名的 Release 版本（无需签名配置）
-          # 若需要 Debug 版，可替换为 ./gradlew assembleDebug
-          ./gradlew assembleRelease --no-daemon --stacktrace  # 添加stacktrace便于调试
+          # 准备构建
+          echo "=== 准备构建 ==="
+          chmod +x gradlew
           
-          # 验证APK文件生成
-          if [ ! -f "app/build/outputs/apk/release/app-release-unsigned.apk" ]; then
-            echo "::error::APK file not generated!"
+          # 执行构建（增加调试信息）
+          echo "=== 开始构建 ==="
+          ./gradlew assembleRelease --no-daemon --stacktrace --info --scan
+          
+          # 验证构建结果
+          echo "=== 验证构建结果 ==="
+          if [ -f "app/build/outputs/apk/release/app-release-unsigned.apk" ]; then
+            echo "APK生成成功！"
+            ls -la app/build/outputs/apk/release/
+          else
+            echo "::error::APK生成失败！"
+            find . -name "*.log" -type f -print -exec cat {} \;
             exit 1
           fi
 

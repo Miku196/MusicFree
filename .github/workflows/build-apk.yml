@@ -12,10 +12,11 @@ jobs:
     runs-on: ubuntu-latest  # 使用 Ubuntu 系统
 
     steps:
-      # 步骤 1：检出代码（包含子模块）
+      # 步骤 1：检出代码（包含子模块和gradle wrapper）
       - uses: actions/checkout@v4
         with:
           submodules: recursive
+          fetch-depth: 0  # 获取完整历史记录确保gradle wrapper存在
 
       # 步骤 2：配置 JDK 环境（Android 构建依赖）
       - name: Set up JDK 17
@@ -29,11 +30,27 @@ jobs:
       - name: Build Unsigned APK
         working-directory: ./android
         run: |
+          # 验证gradlew文件存在
+          if [ ! -f "./gradlew" ]; then
+            echo "::error::gradlew file not found!"
+            exit 1
+          fi
+          
           # 添加执行权限
           chmod +x gradlew
+          
+          # 显示gradle版本信息
+          ./gradlew --version
+          
           # 直接构建未签名的 Release 版本（无需签名配置）
           # 若需要 Debug 版，可替换为 ./gradlew assembleDebug
-          ./gradlew assembleRelease --no-daemon  # --no-daemon 关闭后台进程，减少资源占用
+          ./gradlew assembleRelease --no-daemon --stacktrace  # 添加stacktrace便于调试
+          
+          # 验证APK文件生成
+          if [ ! -f "app/build/outputs/apk/release/app-release-unsigned.apk" ]; then
+            echo "::error::APK file not generated!"
+            exit 1
+          fi
 
       # 步骤 4：上传 APK 到 GitHub Actions 工件（临时下载用）
       - name: Upload Unsigned APK

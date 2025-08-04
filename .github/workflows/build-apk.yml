@@ -12,8 +12,10 @@ jobs:
     runs-on: ubuntu-latest  # 使用 Ubuntu 系统
 
     steps:
-      # 步骤 1：检出代码
-      - uses: actions/checkout@v4  # 推荐使用最新版 checkout 动作（v4）
+      # 步骤 1：检出代码（包含子模块）
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       # 步骤 2：配置 JDK 环境（Android 构建依赖）
       - name: Set up JDK 17
@@ -25,6 +27,7 @@ jobs:
 
       # 步骤 3：构建未签名的 Release APK（或 Debug 版）
       - name: Build Unsigned APK
+        working-directory: ./android
         run: |
           # 直接构建未签名的 Release 版本（无需签名配置）
           # 若需要 Debug 版，可替换为 ./gradlew assembleDebug

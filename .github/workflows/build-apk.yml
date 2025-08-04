@@ -29,6 +29,8 @@ jobs:
       - name: Build Unsigned APK
         working-directory: ./android
         run: |
+          # 添加执行权限
+          chmod +x gradlew
           # 直接构建未签名的 Release 版本（无需签名配置）
           # 若需要 Debug 版，可替换为 ./gradlew assembleDebug
           ./gradlew assembleRelease --no-daemon  # --no-daemon 关闭后台进程，减少资源占用
